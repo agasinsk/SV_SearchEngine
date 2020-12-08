@@ -1,4 +1,4 @@
-﻿using SearchEngine.Model.Entities;
+﻿using SearchEngine.Model.Entity;
 using System.Collections.Generic;
 
 namespace SearchEngine.Model

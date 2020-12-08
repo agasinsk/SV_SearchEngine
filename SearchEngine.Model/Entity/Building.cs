@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SearchEngine.Model.Entities
+namespace SearchEngine.Model.Entity
 {
     public class Building
     {

@@ -1,7 +1,7 @@
 ﻿using SearchEngine.Model.Enum;
 using System;
 
-namespace SearchEngine.Model.Entities
+namespace SearchEngine.Model.Entity
 {
     public class Medium
     {
