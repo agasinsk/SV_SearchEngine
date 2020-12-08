@@ -1,7 +1,9 @@
-﻿namespace SearchEngine.Service.Interface
+﻿using System.Threading.Tasks;
+
+namespace SearchEngine.Service.Interface
 {
     public interface IDataProvider<T>
     {
-        T GetData();
+        Task<T> GetData();
     }
 }

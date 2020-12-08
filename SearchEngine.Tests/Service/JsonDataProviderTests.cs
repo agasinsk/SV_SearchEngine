@@ -6,6 +6,7 @@ using SearchEngine.Model.Entity;
 using SearchEngine.Service.Implementation;
 using SearchEngine.Service.Interface;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace SearchEngine.Tests.Service
@@ -22,7 +23,7 @@ namespace SearchEngine.Tests.Service
         }
 
         [Fact]
-        public void Should_RetrieveDataFromJson()
+        public async Task Should_RetrieveDataFromJson()
         {
             // Arrange
             var expectedRootObject = new RootObject
@@ -33,10 +34,10 @@ namespace SearchEngine.Tests.Service
                 Media = new List<Medium>(),
             };
             var rootObjectString = JsonConvert.SerializeObject(expectedRootObject);
-            _fileContentProviderMock.Setup(x => x.GetFileContent()).Returns(rootObjectString);
+            _fileContentProviderMock.Setup(x => x.GetFileContent()).ReturnsAsync(rootObjectString);
 
             // Act
-            var result = _jsonDataProvider.GetData();
+            var result = await _jsonDataProvider.GetData();
 
             // Assert
             result.Should().NotBeNull();

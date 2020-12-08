@@ -3,6 +3,7 @@ using SearchEngine.Model.Configuration;
 using SearchEngine.Service.Interface;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace SearchEngine.Service.Implementation
 {
@@ -15,7 +16,7 @@ namespace SearchEngine.Service.Implementation
             _dataSourceConfiguration = dataSourceConfiguration ?? throw new ArgumentNullException(nameof(dataSourceConfiguration));
         }
 
-        public string GetFileContent()
+        public async Task<string> GetFileContent()
         {
             var filePath = _dataSourceConfiguration.Value.FilePath;
             var fileContent = File.ReadAllText(filePath);

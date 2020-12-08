@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SearchEngine.Service.Interface;
 using System;
+using System.Threading.Tasks;
 
 namespace SearchEngine.Service.Implementation
 {
@@ -14,9 +15,9 @@ namespace SearchEngine.Service.Implementation
             _fileContentProvider = fileContentProvider ?? throw new ArgumentNullException(nameof(fileContentProvider));
         }
 
-        public T GetData()
+        public async Task<T> GetData()
         {
-            var fileContent = _fileContentProvider.GetFileContent();
+            var fileContent = await _fileContentProvider.GetFileContent();
             var data = JsonConvert.DeserializeObject<T>(fileContent);
 
             return data;
