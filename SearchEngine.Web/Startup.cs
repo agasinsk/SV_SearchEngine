@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using SearchEngine.Model.Configuration;
+using SearchEngine.Service.Configuration;
 using SearchEngine.Web.Configuration;
 
 namespace SearchEngine.Web
@@ -34,6 +36,7 @@ namespace SearchEngine.Web
 
             services.AddCors();
             services.AddServiceModule();
+            services.AddAutoMapper(typeof(SearchProfile));
 
             services.Configure<DataSourceOptions>(Configuration.GetSection(DataSourceOptions.SectionName));
 
