@@ -2,6 +2,8 @@
 using SearchEngine.Model.DTO;
 using SearchEngine.Model.Entity;
 using SearchEngine.Model.Enum;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SearchEngine.Service.Configuration
 {
@@ -9,6 +11,16 @@ namespace SearchEngine.Service.Configuration
     {
         public SearchProfile()
         {
+            CreateMap<RootObject, IEnumerable<SearchResultDTO>>()
+                .ConstructUsing((src, ctx) =>
+                {
+                    return ctx.Mapper.Map<IEnumerable<SearchResultDTO>>(src.Buildings)
+                    .Concat(ctx.Mapper.Map<IEnumerable<SearchResultDTO>>(src.Locks))
+                    .Concat(ctx.Mapper.Map<IEnumerable<SearchResultDTO>>(src.Groups))
+                    .Concat(ctx.Mapper.Map<IEnumerable<SearchResultDTO>>(src.Media))
+                    .ToList();
+                });
+
             CreateMap<Building, SearchResultDTO>()
                 .ForMember(dst => dst.SearchObjectType, m => m.MapFrom(src => SearchObjectType.Building))
                 .ForMember(dst => dst.ResultObjectId, m => m.MapFrom(src => src.Id))

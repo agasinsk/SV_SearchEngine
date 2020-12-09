@@ -7,8 +7,6 @@ namespace SearchEngine.Model.DTO
     {
         public SearchObjectType SearchObjectType { get; set; }
 
-        public int SearchRank { get; set; }
-
         public Guid ResultObjectId { get; set; }
 
         public string ResultObjectKey { get; set; }
