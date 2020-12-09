@@ -1,9 +1,10 @@
 ﻿using SearchEngine.Model.Enum;
+using SearchEngine.Model.Interface;
 using System;
 
 namespace SearchEngine.Model.Entity
 {
-    public class Medium
+    public class Medium : ISearchable
     {
         public Guid Id { get; set; }
 

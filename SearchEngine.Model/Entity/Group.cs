@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SearchEngine.Model.Interface;
+using System;
 
 namespace SearchEngine.Model.Entity
 {
-    public class Group
+    public class Group : ISearchable
     {
         public Guid Id { get; set; }
 
