@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SearchEngine.Model.DTO;
 using SearchEngine.Model.Entity;
+using SearchEngine.Model.Interface;
 using SearchEngine.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,23 @@ namespace SearchEngine.Service.Implementation
                 return _mapper.Map<IEnumerable<SearchResultDTO>>(data);
             }
 
-            return Enumerable.Empty<SearchResultDTO>();
+            var searchableItems = data.Buildings.Cast<ISearchable>()
+                .Concat(data.Locks)
+                .Concat(data.Groups)
+                .Concat(data.Media);
+            var searchEvaluator = new SearchEvaluator();
+
+            var searchWeights = searchableItems
+                .Select(x => new { x, Weights = searchEvaluator.Evaluate(x, searchInput) })
+                .ToList();
+
+            var transitiveWeights = searchWeights
+                .Where(x => x.Weights.transitiveWeight > 0)
+                .ToDictionary(k => k.x, v => v.Weights.transitiveWeight);
+
+            var searchResults = _mapper.Map<IEnumerable<SearchResultDTO>>(searchWeights.Select(_ => _.x));
+
+            return searchResults;
         }
     }
 }

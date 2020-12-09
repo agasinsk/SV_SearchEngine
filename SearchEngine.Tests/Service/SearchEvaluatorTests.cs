@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SearchEngine.Model.Entity;
+using SearchEngine.Model.Enum;
 using SearchEngine.Service.Implementation;
 using System;
 using Xunit;
@@ -41,7 +42,7 @@ namespace SearchEngine.Tests.Service
             };
 
             // Act
-            var result = _searchEvaluator.ApplySearch(building, searchString);
+            var result = _searchEvaluator.Evaluate(building, searchString);
 
             // Assert
             result.Should().NotBeNull();
@@ -51,16 +52,8 @@ namespace SearchEngine.Tests.Service
 
         [Theory]
         [InlineData("head")]
-        [InlineData("Head")]
         [InlineData("office")]
-        [InlineData("Office")]
-        [InlineData("HO")]
-        [InlineData("HOFF")]
-        [InlineData("Feringastraße")]
         [InlineData("85774")]
-        [InlineData("Unterföhring")]
-        [InlineData("Main")]
-        [InlineData("Unknown")]
         [InlineData("")]
         [InlineData(null)]
         public void Should_GetDefaultSearchWeight_ForEmptyBuilding(string searchString)
@@ -69,7 +62,158 @@ namespace SearchEngine.Tests.Service
             var building = new Building();
 
             // Act
-            var result = _searchEvaluator.ApplySearch(building, searchString);
+            var result = _searchEvaluator.Evaluate(building, searchString);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.weight.Should().Be(0);
+            result.transitiveWeight.Should().Be(0);
+        }
+
+        [Theory]
+        [InlineData("Gästezimmer", 10, 0)]
+        [InlineData("zimmer", 10, 0)]
+        [InlineData("UID", 8, 0)]
+        [InlineData("A89F98F3", 8, 0)]
+        [InlineData("Cylinder", 3, 0)]
+        [InlineData("4.OG", 16, 0)]
+        [InlineData("OG", 16, 0)]
+        [InlineData("Floor", 6, 0)]
+        [InlineData("454", 6, 0)]
+        [InlineData("", 0, 0)]
+        [InlineData(null, 0, 0)]
+        public void Should_GetCorrectSearchWeight_ForLock(string searchString, int expectedSearchWeight, int expectedTransitiveWeight)
+        {
+            // Arrange
+            var cylinderLock = new Lock
+            {
+                Id = Guid.NewGuid(),
+                BuildingId = Guid.NewGuid(),
+                Type = LockType.Cylinder,
+                Name = "Gästezimmer 4.OG",
+                SerialNumber = "UID-A89F98F3",
+                Floor = "Floor 4.OG",
+                RoomNumber = "454",
+            };
+
+            // Act
+            var result = _searchEvaluator.Evaluate(cylinderLock, searchString);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.weight.Should().Be(expectedSearchWeight);
+            result.transitiveWeight.Should().Be(expectedTransitiveWeight);
+        }
+
+        [Theory]
+        [InlineData("head")]
+        [InlineData("Office")]
+        [InlineData("Main")]
+        [InlineData("")]
+        [InlineData(null)]
+        public void Should_GetDefaultSearchWeight_ForEmptyLock(string searchString)
+        {
+            // Arrange
+            var building = new Lock();
+
+            // Act
+            var result = _searchEvaluator.Evaluate(building, searchString);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.weight.Should().Be(0);
+            result.transitiveWeight.Should().Be(0);
+        }
+
+        [Theory]
+        [InlineData("main", 9, 8)]
+        [InlineData("Main", 9, 8)]
+        [InlineData("Group", 14, 8)]
+        [InlineData("CEO", 5, 0)]
+        [InlineData("CFO", 5, 0)]
+        [InlineData("CTo", 5, 0)]
+        [InlineData("etc", 5, 0)]
+        [InlineData("Unknown", 0, 0)]
+        [InlineData("", 0, 0)]
+        [InlineData(null, 0, 0)]
+        public void Should_GetCorrectSearchWeight_ForGroup(string searchString, int expectedSearchWeight, int expectedTransitiveWeight)
+        {
+            // Arrange
+            var building = new Group
+            {
+                Id = Guid.NewGuid(),
+                Name = "Main Group",
+                Description = "Group CEO, CFO, CTO, etc."
+            };
+
+            // Act
+            var result = _searchEvaluator.Evaluate(building, searchString);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.weight.Should().Be(expectedSearchWeight);
+            result.transitiveWeight.Should().Be(expectedTransitiveWeight);
+        }
+
+        [Theory]
+        [InlineData("head")]
+        [InlineData("Office")]
+        [InlineData("")]
+        [InlineData(null)]
+        public void Should_GetDefaultSearchWeight_ForEmptyGroup(string searchString)
+        {
+            // Arrange
+            var building = new Group();
+
+            // Act
+            var result = _searchEvaluator.Evaluate(building, searchString);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.weight.Should().Be(0);
+            result.transitiveWeight.Should().Be(0);
+        }
+
+        [Theory]
+        [InlineData("UID", 8, 0)]
+        [InlineData("378D17F6", 8, 0)]
+        [InlineData("Guest", 10, 0)]
+        [InlineData("Card", 3, 0)]
+        [InlineData("Unknown", 0, 0)]
+        [InlineData("", 0, 0)]
+        [InlineData(null, 0, 0)]
+        public void Should_GetCorrectSearchWeight_ForMedium(string searchString, int expectedSearchWeight, int expectedTransitiveWeight)
+        {
+            // Arrange
+            var building = new Medium
+            {
+                Id = Guid.NewGuid(),
+                SerialNumber = "UID-378D17F6",
+                Type = Model.Enum.MediumType.Card,
+                Owner = "Guest 1",
+            };
+
+            // Act
+            var result = _searchEvaluator.Evaluate(building, searchString);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.weight.Should().Be(expectedSearchWeight);
+            result.transitiveWeight.Should().Be(expectedTransitiveWeight);
+        }
+
+        [Theory]
+        [InlineData("head")]
+        [InlineData("Office")]
+        [InlineData("")]
+        [InlineData(null)]
+        public void Should_GetDefaultSearchWeight_ForEmptyMedium(string searchString)
+        {
+            // Arrange
+            var building = new Medium();
+
+            // Act
+            var result = _searchEvaluator.Evaluate(building, searchString);
 
             // Assert
             result.Should().NotBeNull();
