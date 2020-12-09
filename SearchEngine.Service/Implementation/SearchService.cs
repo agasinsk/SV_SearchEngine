@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using SearchEngine.Model;
 using SearchEngine.Model.DTO;
+using SearchEngine.Model.Entity;
 using SearchEngine.Service.Interface;
 using System;
 using System.Collections.Generic;

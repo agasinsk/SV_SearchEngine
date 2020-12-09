@@ -1,7 +1,6 @@
-﻿using SearchEngine.Model.Entity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace SearchEngine.Model
+namespace SearchEngine.Model.Entity
 {
     public class RootObject
     {
