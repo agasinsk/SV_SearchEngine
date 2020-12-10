@@ -2,6 +2,7 @@
 using SearchEngine.Model.Entity;
 using SearchEngine.Model.Enum;
 using SearchEngine.Service.Implementation;
+using SearchEngine.Service.Interface;
 using System;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace SearchEngine.Tests.Service
 {
     public class SearchEvaluatorTests
     {
-        private readonly SearchEvaluator _searchEvaluator;
+        private readonly ISearchEvaluator _searchEvaluator;
 
         public SearchEvaluatorTests()
         {

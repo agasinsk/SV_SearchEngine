@@ -58,7 +58,7 @@ namespace SearchEngine.Service.Implementation
                     return new MediumSearchConfiguration();
 
                 default:
-                    throw new ArgumentException("Unknown type of search item");
+                    throw new ArgumentException("Unknown type of searchable item");
             }
         }
     }
