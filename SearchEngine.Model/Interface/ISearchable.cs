@@ -1,6 +1,6 @@
 ﻿namespace SearchEngine.Model.Interface
 {
-    public interface ISearchable
+    public interface ISearchable : IIdentifiable
     {
     }
 }

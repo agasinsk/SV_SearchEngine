@@ -4,7 +4,7 @@ using System;
 
 namespace SearchEngine.Model.Entity
 {
-    public class Medium : ISearchable
+    public class Medium : ITransitiveSearchable
     {
         public Guid Id { get; set; }
 
@@ -17,5 +17,7 @@ namespace SearchEngine.Model.Entity
         public string Description { get; set; }
 
         public string SerialNumber { get; set; }
+
+        public Guid TransitiveId => GroupId;
     }
 }

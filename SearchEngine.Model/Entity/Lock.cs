@@ -4,7 +4,7 @@ using System;
 
 namespace SearchEngine.Model.Entity
 {
-    public class Lock : ISearchable
+    public class Lock : ITransitiveSearchable
     {
         public Guid Id { get; set; }
 
@@ -21,5 +21,7 @@ namespace SearchEngine.Model.Entity
         public string Floor { get; set; }
 
         public string RoomNumber { get; set; }
+
+        public Guid TransitiveId => BuildingId;
     }
 }
