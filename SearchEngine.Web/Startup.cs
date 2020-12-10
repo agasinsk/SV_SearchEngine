@@ -37,6 +37,7 @@ namespace SearchEngine.Web
             services.AddCors();
             services.AddServiceModule();
             services.AddAutoMapper(typeof(SearchProfile));
+            services.AddMemoryCache();
 
             services.Configure<DataSourceOptions>(Configuration.GetSection(DataSourceOptions.SectionName));
 
