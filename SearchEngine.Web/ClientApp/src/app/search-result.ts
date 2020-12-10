@@ -1,5 +1,5 @@
 export interface SearchResultDTO {
-  searchObjectType: string;
+  resultObjectType: string;
   resultObjectId: string;
   resultObjectKey: string;
   resultObjectName: string;

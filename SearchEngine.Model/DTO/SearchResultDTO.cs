@@ -5,7 +5,7 @@ namespace SearchEngine.Model.DTO
 {
     public class SearchResultDTO
     {
-        public SearchObjectType SearchObjectType { get; set; }
+        public ObjectType ResultObjectType { get; set; }
 
         public Guid ResultObjectId { get; set; }
 

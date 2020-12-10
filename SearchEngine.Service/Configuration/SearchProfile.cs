@@ -22,15 +22,15 @@ namespace SearchEngine.Service.Configuration
                 });
 
             CreateMap<Building, SearchResultDTO>()
-                .ForMember(dst => dst.SearchObjectType, m => m.MapFrom(src => SearchObjectType.Building))
+                .ForMember(dst => dst.ResultObjectType, m => m.MapFrom(src => ObjectType.Building))
                 .ForMember(dst => dst.ResultObjectId, m => m.MapFrom(src => src.Id))
-                .ForMember(dst => dst.ResultObjectKey, m => m.MapFrom(src => src.Id))
+                .ForMember(dst => dst.ResultObjectKey, m => m.Ignore())
                 .ForMember(dst => dst.ResultObjectName, m => m.MapFrom(src => src.Name))
                 .ForMember(dst => dst.ResultObjectDescription, m => m.MapFrom(src => src.Description))
                 .ForMember(dst => dst.ResultObjectText, m => m.MapFrom(src => $"Shortcut: {src.ShortCut}"));
 
             CreateMap<Lock, SearchResultDTO>()
-                .ForMember(dst => dst.SearchObjectType, m => m.MapFrom(src => SearchObjectType.Lock))
+                .ForMember(dst => dst.ResultObjectType, m => m.MapFrom(src => ObjectType.Lock))
                 .ForMember(dst => dst.ResultObjectId, m => m.MapFrom(src => src.Id))
                 .ForMember(dst => dst.ResultObjectKey, m => m.MapFrom(src => src.SerialNumber))
                 .ForMember(dst => dst.ResultObjectName, m => m.MapFrom(src => src.Name))
@@ -38,14 +38,14 @@ namespace SearchEngine.Service.Configuration
                 .ForMember(dst => dst.ResultObjectText, m => m.MapFrom(src => $"Type: {src.Type} | Floor: {src.Floor} | Room: {src.RoomNumber}"));
 
             CreateMap<Group, SearchResultDTO>()
-                .ForMember(dst => dst.SearchObjectType, m => m.MapFrom(src => SearchObjectType.Group))
+                .ForMember(dst => dst.ResultObjectType, m => m.MapFrom(src => ObjectType.Group))
                 .ForMember(dst => dst.ResultObjectId, m => m.MapFrom(src => src.Id))
-                .ForMember(dst => dst.ResultObjectKey, m => m.MapFrom(src => src.Id))
+                .ForMember(dst => dst.ResultObjectKey, m => m.Ignore())
                 .ForMember(dst => dst.ResultObjectName, m => m.MapFrom(src => src.Name))
                 .ForMember(dst => dst.ResultObjectDescription, m => m.MapFrom(src => src.Description));
 
             CreateMap<Medium, SearchResultDTO>()
-                .ForMember(dst => dst.SearchObjectType, m => m.MapFrom(src => SearchObjectType.Medium))
+                .ForMember(dst => dst.ResultObjectType, m => m.MapFrom(src => ObjectType.Medium))
                 .ForMember(dst => dst.ResultObjectId, m => m.MapFrom(src => src.Id))
                 .ForMember(dst => dst.ResultObjectKey, m => m.MapFrom(src => src.SerialNumber))
                 .ForMember(dst => dst.ResultObjectName, m => m.MapFrom(src => src.Type))

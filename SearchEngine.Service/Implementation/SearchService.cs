@@ -23,11 +23,11 @@ namespace SearchEngine.Service.Implementation
             _searchEvaluator = searchEvaluator;
         }
 
-        public async Task<IEnumerable<SearchResultDTO>> ApplySearch(string searchString)
+        public async Task<IEnumerable<SearchResultDTO>> ApplySearch(string query)
         {
             var data = await _dataProvider.GetData();
 
-            if (string.IsNullOrEmpty(searchString))
+            if (string.IsNullOrEmpty(query))
             {
                 return _mapper.Map<IEnumerable<SearchResultDTO>>(data);
             }
@@ -38,7 +38,7 @@ namespace SearchEngine.Service.Implementation
                 .Concat(data.Media);
 
             var searchEvaluations = searchableItems
-                .ToDictionary(x => x, v => _searchEvaluator.Evaluate(v, searchString));
+                .ToDictionary(x => x, v => _searchEvaluator.Evaluate(v, query));
 
             var finalSearchEvaluations = searchEvaluations
                 .Select(x => new

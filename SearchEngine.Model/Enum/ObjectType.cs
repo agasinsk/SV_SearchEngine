@@ -1,6 +1,6 @@
 ﻿namespace SearchEngine.Model.Enum
 {
-    public enum SearchObjectType
+    public enum ObjectType
     {
         Undefined = 0,
         Building = 1,

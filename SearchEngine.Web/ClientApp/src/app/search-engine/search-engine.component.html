@@ -11,6 +11,7 @@
   <thead>
     <tr>
       <th>Type</th>
+      <th>Key</th>
       <th>Name</th>
       <th>Description</th>
       <th>Details</th>
@@ -18,7 +19,8 @@
   </thead>
   <tbody>
     <tr *ngFor="let searchResult of searchResults$ | async">
-      <td>{{ searchResult.searchObjectType }}</td>
+      <td>{{ searchResult.resultObjectType }}</td>
+      <td>{{ searchResult.resultObjectKey }}</td>
       <td>{{ searchResult.resultObjectName }}</td>
       <td>{{ searchResult.resultObjectDescription }}</td>
       <td>{{ searchResult.resultObjectText }}</td>

@@ -54,10 +54,10 @@ namespace SearchEngine.Tests.Service
             searchResults.Should().BeAssignableTo<IEnumerable<SearchResultDTO>>();
             searchResults.Should().HaveCount(data.Buildings.Count() + data.Locks.Count());
 
-            searchResults.Count(x => x.SearchObjectType == SearchObjectType.Building).Should().Be(data.Buildings.Count());
-            searchResults.Count(x => x.SearchObjectType == SearchObjectType.Lock).Should().Be(data.Locks.Count());
-            searchResults.Count(x => x.SearchObjectType == SearchObjectType.Group).Should().Be(data.Groups.Count());
-            searchResults.Count(x => x.SearchObjectType == SearchObjectType.Medium).Should().Be(data.Media.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Building).Should().Be(data.Buildings.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Lock).Should().Be(data.Locks.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Group).Should().Be(data.Groups.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Medium).Should().Be(data.Media.Count());
 
             searchResults.First().ResultObjectId.Should().Be(expectedFirstResult.Id);
             searchResults.ElementAt(1).ResultObjectId.Should().Be(expectedSecondResult.Id);
@@ -90,10 +90,10 @@ namespace SearchEngine.Tests.Service
             searchResults.Should().BeAssignableTo<IEnumerable<SearchResultDTO>>();
             searchResults.Should().HaveCount(data.Buildings.Count() + data.Locks.Count());
 
-            searchResults.Count(x => x.SearchObjectType == SearchObjectType.Building).Should().Be(data.Buildings.Count());
-            searchResults.Count(x => x.SearchObjectType == SearchObjectType.Lock).Should().Be(data.Locks.Count());
-            searchResults.Count(x => x.SearchObjectType == SearchObjectType.Group).Should().Be(data.Groups.Count());
-            searchResults.Count(x => x.SearchObjectType == SearchObjectType.Medium).Should().Be(data.Media.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Building).Should().Be(data.Buildings.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Lock).Should().Be(data.Locks.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Group).Should().Be(data.Groups.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Medium).Should().Be(data.Media.Count());
 
             searchResults.Select(x => x.ResultObjectId).Should()
                 .BeEquivalentTo(data.Buildings.Select(x => x.Id).Concat(data.Locks.Select(x => x.Id)));
