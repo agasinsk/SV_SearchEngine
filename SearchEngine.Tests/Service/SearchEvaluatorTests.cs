@@ -2,6 +2,7 @@
 using SearchEngine.Model.Entity;
 using SearchEngine.Model.Enum;
 using SearchEngine.Service.Implementation;
+using SearchEngine.Service.Implementation.SearchConfiguration;
 using SearchEngine.Service.Interface;
 using System;
 using Xunit;
@@ -14,7 +15,7 @@ namespace SearchEngine.Tests.Service
 
         public SearchEvaluatorTests()
         {
-            _searchEvaluator = new SearchEvaluator();
+            _searchEvaluator = new SearchEvaluator(new SearchConfigurationFactory());
         }
 
         [Theory]

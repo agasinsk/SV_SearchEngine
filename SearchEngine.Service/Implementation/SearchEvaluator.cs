@@ -1,6 +1,4 @@
-﻿using SearchEngine.Model.Entity;
-using SearchEngine.Model.Interface;
-using SearchEngine.Service.Implementation.SearchConfiguration;
+﻿using SearchEngine.Model.Interface;
 using SearchEngine.Service.Interface;
 using System;
 
@@ -8,16 +6,23 @@ namespace SearchEngine.Service.Implementation
 {
     public class SearchEvaluator : ISearchEvaluator
     {
-        public (int weight, int transitiveWeight) Evaluate(ISearchable searchableItem, string searchString)
+        private readonly ISearchConfigurationFactory _searchConfigurationFactory;
+
+        public SearchEvaluator(ISearchConfigurationFactory searchConfigurationFactory)
+        {
+            _searchConfigurationFactory = searchConfigurationFactory ?? throw new ArgumentNullException(nameof(searchConfigurationFactory));
+        }
+
+        public (int weight, int transitiveWeight) Evaluate(ISearchable searchable, string searchString)
         {
             if (string.IsNullOrEmpty(searchString))
             {
                 return (0, 0);
             }
 
-            var searchConfiguration = GetSearchConfiguration(searchableItem);
-            var properties = searchableItem.GetType().GetProperties();
+            var searchConfiguration = _searchConfigurationFactory.GetSearchConfiguration(searchable);
 
+            var properties = searchable.GetType().GetProperties();
             int totalWeight = 0, totalTransitiveWeight = 0;
 
             foreach (var property in properties)
@@ -29,7 +34,7 @@ namespace SearchEngine.Service.Implementation
                     continue;
                 }
 
-                var propertyValue = property.GetValue(searchableItem);
+                var propertyValue = property.GetValue(searchable);
 
                 if (propertyValue != null && propertyValue.ToString().ToLower().Contains(searchString.ToLower()))
                 {
@@ -39,27 +44,6 @@ namespace SearchEngine.Service.Implementation
             }
 
             return (totalWeight, totalTransitiveWeight);
-        }
-
-        private ISearchConfiguration GetSearchConfiguration(ISearchable searchableItem)
-        {
-            switch (searchableItem)
-            {
-                case Building _:
-                    return new BuildingSearchConfiguration();
-
-                case Lock _:
-                    return new LockSearchConfiguration();
-
-                case Group _:
-                    return new GroupSearchConfiguration();
-
-                case Medium _:
-                    return new MediumSearchConfiguration();
-
-                default:
-                    throw new ArgumentException("Unknown type of searchable item");
-            }
         }
     }
 }
