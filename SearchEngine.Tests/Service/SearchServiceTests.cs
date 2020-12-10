@@ -21,13 +21,15 @@ namespace SearchEngine.Tests.Service
     {
         private readonly Mapper _mapper;
         private readonly Mock<IDataProvider<RootObject>> _dataProviderMock;
+        private readonly Mock<ISearchEvaluator> _searchEvaluator;
         private readonly ISearchService _searchService;
 
         public SearchServiceTests()
         {
             _mapper = new Mapper(new MapperConfiguration(x => x.AddProfile(new SearchProfile())));
             _dataProviderMock = new Mock<IDataProvider<RootObject>>();
-            _searchService = new SearchService(_dataProviderMock.Object, _mapper);
+            _searchEvaluator = new Mock<ISearchEvaluator>();
+            _searchService = new SearchService(_dataProviderMock.Object, _mapper, new SearchEvaluator());
         }
 
         [Fact]
