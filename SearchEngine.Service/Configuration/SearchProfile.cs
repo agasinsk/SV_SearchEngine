@@ -35,7 +35,7 @@ namespace SearchEngine.Service.Configuration
                 .ForMember(dst => dst.ResultObjectKey, m => m.MapFrom(src => src.SerialNumber))
                 .ForMember(dst => dst.ResultObjectName, m => m.MapFrom(src => src.Name))
                 .ForMember(dst => dst.ResultObjectDescription, m => m.MapFrom(src => src.Description))
-                .ForMember(dst => dst.ResultObjectText, m => m.MapFrom(src => $"Type: {src.Type} Floor: {src.Floor} Room: {src.RoomNumber}"));
+                .ForMember(dst => dst.ResultObjectText, m => m.MapFrom(src => $"Type: {src.Type} | Floor: {src.Floor} | Room: {src.RoomNumber}"));
 
             CreateMap<Group, SearchResultDTO>()
                 .ForMember(dst => dst.SearchObjectType, m => m.MapFrom(src => SearchObjectType.Group))
@@ -50,7 +50,7 @@ namespace SearchEngine.Service.Configuration
                 .ForMember(dst => dst.ResultObjectKey, m => m.MapFrom(src => src.SerialNumber))
                 .ForMember(dst => dst.ResultObjectName, m => m.MapFrom(src => src.Type))
                 .ForMember(dst => dst.ResultObjectDescription, m => m.MapFrom(src => src.Description))
-                .ForMember(dst => dst.ResultObjectText, m => m.MapFrom(src => $"Type: {src.Type} Owner: {src.Owner}"));
+                .ForMember(dst => dst.ResultObjectText, m => m.MapFrom(src => $"Type: {src.Type} | Owner: {src.Owner}"));
         }
     }
 }

@@ -15,7 +15,7 @@ namespace SearchEngine.Web.Configuration
         {
             services.AddTransient(typeof(IDataProvider<>), typeof(JsonDataProvider<>));
             services.AddTransient<IFileContentProvider, FileContentProvider>();
-            services.AddTransient<ISearchService, ISearchService>();
+            services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<ISearchEvaluator, SearchEvaluator>();
             services.AddTransient<ISearchConfigurationFactory, SearchConfigurationFactory>();
 
