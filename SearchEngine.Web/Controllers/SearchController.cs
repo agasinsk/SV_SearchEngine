@@ -22,9 +22,9 @@ namespace SearchEngine.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<SearchResultDTO>> Search(string searchString)
+        public async Task<IEnumerable<SearchResultDTO>> Search(string query)
         {
-            return await _searchService.ApplySearch(searchString);
+            return await _searchService.ApplySearch(query);
         }
     }
 }
