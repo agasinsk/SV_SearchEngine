@@ -52,5 +52,21 @@ namespace SearchEngine.Service.Implementation
 
             return searchResults;
         }
+
+        private int GetTotalSearchWeight(ISearchable key, Dictionary<ISearchable, (int weight, int transitiveWeight)> searchEvaluations)
+        {
+            switch (key)
+            {
+                case ITransitiveSearchable ts:
+                    var searchableItem = searchEvaluations.FirstOrDefault(x => x.Key.Id == ts.TransitiveId);
+                    return searchEvaluations[key].weight + searchEvaluations[searchableItem.Key].weight;
+
+                case ISearchable s:
+                    return searchEvaluations[key].weight;
+
+                default:
+                    return default;
+            }
+        }
     }
 }

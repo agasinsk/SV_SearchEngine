@@ -5,13 +5,13 @@ using Moq;
 using SearchEngine.Model.DTO;
 using SearchEngine.Model.Entity;
 using SearchEngine.Model.Enum;
+using SearchEngine.Model.Interface;
 using SearchEngine.Service.Configuration;
 using SearchEngine.Service.Implementation;
 using SearchEngine.Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -21,15 +21,15 @@ namespace SearchEngine.Tests.Service
     {
         private readonly Mapper _mapper;
         private readonly Mock<IDataProvider<RootObject>> _dataProviderMock;
-        private readonly Mock<ISearchEvaluator> _searchEvaluator;
+        private readonly Mock<ISearchEvaluator> _searchEvaluatorMock;
         private readonly ISearchService _searchService;
 
         public SearchServiceTests()
         {
             _mapper = new Mapper(new MapperConfiguration(x => x.AddProfile(new SearchProfile())));
             _dataProviderMock = new Mock<IDataProvider<RootObject>>();
-            _searchEvaluator = new Mock<ISearchEvaluator>();
-            _searchService = new SearchService(_dataProviderMock.Object, _mapper, new SearchEvaluator());
+            _searchEvaluatorMock = new Mock<ISearchEvaluator>();
+            _searchService = new SearchService(_dataProviderMock.Object, _mapper, _searchEvaluatorMock.Object);
         }
 
         [Fact]
@@ -40,6 +40,7 @@ namespace SearchEngine.Tests.Service
             var data = GetMockedData();
 
             _dataProviderMock.Setup(p => p.GetData()).ReturnsAsync(data);
+            _searchEvaluatorMock.Setup(p => p.Evaluate(data.Buildings.First(), searchString)).Returns((14, 8));
 
             var expectedFirstResult = data.Buildings.FirstOrDefault(x => x.Name.ToLower().Contains(searchString.ToLower()));
             var expectedSecondResult = data.Locks.FirstOrDefault(x => x.BuildingId == expectedFirstResult.Id);
@@ -62,6 +63,13 @@ namespace SearchEngine.Tests.Service
             searchResults.ElementAt(1).ResultObjectId.Should().Be(expectedSecondResult.Id);
 
             _dataProviderMock.Verify(x => x.GetData(), Times.Once);
+            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<ISearchable>(), It.IsAny<string>()), Times.Exactly(data.Buildings.Count() + data.Locks.Count()));
+            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<Building>(), searchString), Times.Exactly(data.Buildings.Count()));
+            _searchEvaluatorMock.Verify(x => x.Evaluate(data.Buildings.First(), searchString), Times.Once);
+            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<Lock>(), searchString), Times.Exactly(data.Locks.Count()));
+            _searchEvaluatorMock.Verify(x => x.Evaluate(data.Locks.First(), searchString), Times.Once);
+            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<Group>(), searchString), Times.Never);
+            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<Medium>(), searchString), Times.Never);
         }
 
         [Theory]
@@ -97,6 +105,8 @@ namespace SearchEngine.Tests.Service
                 .BeEquivalentTo(data.Buildings.Select(x => x.Description).Concat(data.Locks.Select(x => x.Description)));
 
             _dataProviderMock.Verify(x => x.GetData(), Times.Once);
+
+            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<ISearchable>(), It.IsAny<string>()), Times.Never);
         }
 
         private static RootObject GetMockedData()
