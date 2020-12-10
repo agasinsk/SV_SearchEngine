@@ -5,6 +5,8 @@ namespace SearchEngine.Service.Implementation.SearchConfiguration
 {
     public class MediumSearchConfiguration : BaseSearchConfiguration
     {
+        public override string TransitivePropertyName => nameof(Medium.GroupId);
+
         protected override IDictionary<string, (int weight, int transitiveWeight)> SearchWeights => new Dictionary<string, (int, int)>
         {
             { nameof(Medium.Owner), (10, 0) },

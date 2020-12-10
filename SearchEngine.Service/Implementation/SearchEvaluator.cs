@@ -3,12 +3,10 @@ using SearchEngine.Model.Interface;
 using SearchEngine.Service.Implementation.SearchConfiguration;
 using SearchEngine.Service.Interface;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SearchEngine.Service.Implementation
 {
-    public class SearchEvaluator
+    public class SearchEvaluator : ISearchEvaluator
     {
         public (int weight, int transitiveWeight) Evaluate(ISearchable searchableItem, string searchString)
         {

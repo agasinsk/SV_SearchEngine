@@ -5,6 +5,8 @@ namespace SearchEngine.Service.Implementation.SearchConfiguration
 {
     public abstract class BaseSearchConfiguration : ISearchConfiguration
     {
+        public abstract string TransitivePropertyName { get; }
+
         protected abstract IDictionary<string, (int weight, int transitiveWeight)> SearchWeights { get; }
 
         public int GetTransitiveWeightForProperty(string propertyName)
