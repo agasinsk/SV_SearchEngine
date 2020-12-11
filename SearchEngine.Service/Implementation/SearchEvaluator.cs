@@ -24,6 +24,7 @@ namespace SearchEngine.Service.Implementation
 
             var properties = searchable.GetType().GetProperties();
             int totalWeight = 0, totalTransitiveWeight = 0;
+            var searchValue = searchString.ToLower();
 
             foreach (var property in properties)
             {
@@ -36,7 +37,7 @@ namespace SearchEngine.Service.Implementation
 
                 var propertyValue = property.GetValue(searchable);
 
-                if (propertyValue != null && propertyValue.ToString().ToLower().Contains(searchString.ToLower()))
+                if (propertyValue != null && propertyValue.ToString().ToLower().Contains(searchValue))
                 {
                     totalWeight += weight;
                     totalTransitiveWeight += transitiveWeight;

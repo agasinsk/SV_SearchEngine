@@ -37,8 +37,7 @@ namespace SearchEngine.Service.Implementation
                 .Concat(data.Groups)
                 .Concat(data.Media);
 
-            var searchEvaluations = searchableItems
-                .ToDictionary(x => x, v => _searchEvaluator.Evaluate(v, query));
+            var searchEvaluations = searchableItems.ToDictionary(x => x, v => _searchEvaluator.Evaluate(v, query));
 
             var finalSearchEvaluations = searchEvaluations
                 .Select(x => new
@@ -53,16 +52,19 @@ namespace SearchEngine.Service.Implementation
             return searchResults;
         }
 
-        private int GetTotalSearchWeight(ISearchable key, Dictionary<ISearchable, (int weight, int transitiveWeight)> searchEvaluations)
+        private int GetTotalSearchWeight(ISearchable searchableItem, Dictionary<ISearchable, (int weight, int transitiveWeight)> evaluations)
         {
-            switch (key)
+            switch (searchableItem)
             {
-                case ITransitiveSearchable ts:
-                    var searchableItem = searchEvaluations.FirstOrDefault(x => x.Key.Id == ts.TransitiveId);
-                    return searchEvaluations[key].weight + searchEvaluations[searchableItem.Key].weight;
+                case ITransitiveSearchable transitiveSearchable:
+                    var transitiveItem = evaluations.Keys.FirstOrDefault(x => x.Id == transitiveSearchable.TransitiveId);
 
-                case ISearchable s:
-                    return searchEvaluations[key].weight;
+                    return searchableItem != null
+                        ? evaluations[searchableItem].weight + evaluations[transitiveItem].weight
+                        : evaluations[searchableItem].weight;
+
+                case ISearchable searchable:
+                    return evaluations[searchableItem].weight;
 
                 default:
                     return default;
