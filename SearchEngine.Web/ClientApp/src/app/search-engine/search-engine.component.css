@@ -1,5 +1,4 @@
-.list-box
-{
-  height: 500px;
+.list-box {
+  height: 75vh;
   overflow: auto;
 }

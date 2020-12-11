@@ -14,8 +14,8 @@ import { SearchService } from '../search.service';
   styleUrls: ['./search-engine.component.css']
 })
 export class SearchEngineComponent implements OnInit {
-  @ViewChild('searchBox') searchBox: ElementRef;
-  @ViewChild('listBox') listBox: ElementRef;
+  @ViewChild('searchBox', { static: false }) searchBox: ElementRef;
+  @ViewChild('listBox', { static: false }) listBox: ElementRef;
 
   searchResults$: Observable<SearchResultDTO[]>;
   private searchStrings = new Subject<string>();
@@ -34,6 +34,8 @@ export class SearchEngineComponent implements OnInit {
       distinctUntilChanged(),
       switchMap((searchQuery: string) => this.searchService.search(searchQuery)),
     );
+
+    this.searchResults$.subscribe(_ => this.scrollToTop());
   }
 
   scrollToTop() {
@@ -43,6 +45,5 @@ export class SearchEngineComponent implements OnInit {
   clearQuery() {
     this.searchBox.nativeElement.value = '';
     this.searchStrings.next('');
-    this.scrollToTop();
   }
 }

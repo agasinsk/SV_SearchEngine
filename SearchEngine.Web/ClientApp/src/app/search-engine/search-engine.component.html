@@ -15,10 +15,9 @@
     </button>
   </div>
 </div>
-<br />
 
 <div #listBox class="list-box">
-  <ul class="list-group">
+  <ul class="list-group" (change)="scrollToTop()">
     <li *ngFor="let searchResult of searchResults$ | async">
       <app-search-result-list-item [item]="searchResult">
       </app-search-result-list-item>
