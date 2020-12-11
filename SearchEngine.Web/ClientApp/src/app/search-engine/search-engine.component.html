@@ -2,28 +2,21 @@
 
 <p>Easily search for the things you need</p>
 
-<input #searchBox type="text" class="form-control" placeholder="What are you looking for?"
-  (input)="search(searchBox.value)" aria-label="searchString" aria-describedby="addon-wrapping">
+<div class="input-group">
+  <input #searchBox type="text" class="form-control" placeholder="What are you looking for?"
+    (input)="search(searchBox.value)" aria-label="searchString" aria-describedby="addon-wrapping">
+  <button type="button" class="btn bg-transparent" style="margin-left: -40px; z-index: 100;" (click)="clearQuery()">
+    <i class="fa fa-times"></i>
+  </button>
+</div>
 
 <br />
 
-<table class='table table-striped' aria-labelledby="tableLabel">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Key</th>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Details</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let searchResult of searchResults$ | async">
-      <td>{{ searchResult.resultObjectType }}</td>
-      <td>{{ searchResult.resultObjectKey }}</td>
-      <td>{{ searchResult.resultObjectName }}</td>
-      <td>{{ searchResult.resultObjectDescription }}</td>
-      <td>{{ searchResult.resultObjectText }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="list-box">
+  <ul class="list-group">
+    <li *ngFor="let searchResult of searchResults$ | async">
+      <app-search-result-list-item [item]="searchResult">
+      </app-search-result-list-item>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,12 @@
+<div class="list-item alert" [ngClass]="{'alert-primary': item.resultObjectType === 'Building', 
+'alert-info': item.resultObjectType === 'Lock', 
+'alert-warning': item.resultObjectType === 'Group', 
+'bg-secondary text-white': item.resultObjectType === 'Medium'}">
+  <div class="d-flex w-100 justify-content-between">
+    <h5 class="mb-1">{{ item.resultObjectName | splitCamelCase }}</h5>
+    <small> {{ item.resultObjectType }}</small>
+  </div>
+  <span *ngIf="item.resultObjectDescription">{{ item.resultObjectDescription }}</span>
+  <span>{{ item.resultObjectText }}</span>
+  <span><small *ngIf="item.resultObjectKey">{{ item.resultObjectKey }}</small></span>
+</div>

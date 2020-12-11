@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import {
@@ -13,7 +13,7 @@ import { SearchService } from '../search.service';
   templateUrl: './search-engine.component.html',
   styleUrls: ['./search-engine.component.css']
 })
-export class SearchEngineComponent implements OnInit {
+export class SearchEngineComponent implements OnInit, AfterContentInit {
   searchResults$: Observable<SearchResultDTO[]>;
   private searchStrings = new Subject<string>();
 
@@ -31,5 +31,13 @@ export class SearchEngineComponent implements OnInit {
       distinctUntilChanged(),
       switchMap((searchQuery: string) => this.searchService.search(searchQuery)),
     );
+  }
+
+  ngAfterContentInit(): void {
+    this.searchStrings.next(' ');
+  }
+
+  clearQuery() {
+    this.searchStrings.next(' ');
   }
 }
