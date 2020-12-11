@@ -7,12 +7,16 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { SearchEngineComponent } from './search-engine/search-engine.component';
+import { SearchResultListItemComponent } from './search-result-list-item/search-result-list-item.component';
+import { SplitCamelCasePipe } from './pipes/split-camel-case-pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    SearchEngineComponent
+    SearchEngineComponent,
+    SearchResultListItemComponent,
+    SplitCamelCasePipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

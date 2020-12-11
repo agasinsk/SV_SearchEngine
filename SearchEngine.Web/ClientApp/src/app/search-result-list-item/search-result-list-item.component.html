@@ -6,7 +6,7 @@
     <h5 class="mb-1">{{ item.resultObjectName | splitCamelCase }}</h5>
     <small> {{ item.resultObjectType }}</small>
   </div>
-  <span *ngIf="item.resultObjectDescription">{{ item.resultObjectDescription }}</span>
-  <span>{{ item.resultObjectText }}</span>
-  <span><small *ngIf="item.resultObjectKey">{{ item.resultObjectKey }}</small></span>
+  <span *ngIf="item.resultObjectDescription">{{ item.resultObjectDescription }} • </span>
+  <span *ngIf="item.resultObjectText">{{ item.resultObjectText }}</span>
+  <span><small *ngIf="item.resultObjectKey"> • {{ item.resultObjectKey }}</small></span>
 </div>

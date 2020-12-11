@@ -21,6 +21,11 @@ export class SearchService {
   }
 
   search(searchQuery: string): Observable<SearchResultDTO[]> {
+    // There's very little point in searching for thing when less than 2 charactes are provided
+    if (!searchQuery.trim() || searchQuery.length < 2) {
+      return of([]);
+    }
+
     return this.http.get<SearchResultDTO[]>(`${this.apiUrl}?query=${searchQuery}`).pipe(
       catchError(this.handleError<SearchResultDTO[]>('search', []))
     );

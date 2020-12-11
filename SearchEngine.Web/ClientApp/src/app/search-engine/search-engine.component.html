@@ -2,17 +2,22 @@
 
 <p>Easily search for the things you need</p>
 
-<div class="input-group">
+<div class="input-group mb-3">
   <input #searchBox type="text" class="form-control" placeholder="What are you looking for?"
-    (input)="search(searchBox.value)" aria-label="searchString" aria-describedby="addon-wrapping">
-  <button type="button" class="btn bg-transparent" style="margin-left: -40px; z-index: 100;" (click)="clearQuery()">
-    <i class="fa fa-times"></i>
-  </button>
+    (input)="search(searchBox.value)" aria-label="Search query" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" type="button" (click)="clearQuery()">
+      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x" fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+          d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+      </svg>
+    </button>
+  </div>
 </div>
-
 <br />
 
-<div class="list-box">
+<div #listBox class="list-box">
   <ul class="list-group">
     <li *ngFor="let searchResult of searchResults$ | async">
       <app-search-result-list-item [item]="searchResult">
