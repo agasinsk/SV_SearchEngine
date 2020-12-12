@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SearchEngine.Model.DTO;
 using SearchEngine.Service.Interface;
 using System;
@@ -12,12 +11,10 @@ namespace SearchEngine.Web.Controllers
     [Route("[controller]")]
     public class SearchController : ControllerBase
     {
-        private readonly ILogger<SearchController> _logger;
         private readonly ISearchService _searchService;
 
-        public SearchController(ISearchService searchService, ILogger<SearchController> logger)
+        public SearchController(ISearchService searchService)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _searchService = searchService ?? throw new ArgumentNullException(nameof(searchService));
         }
 
