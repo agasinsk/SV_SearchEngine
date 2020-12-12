@@ -1,4 +1,5 @@
-import { AfterContentInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject } from 'rxjs';
 
 import {
@@ -20,7 +21,7 @@ export class SearchEngineComponent implements OnInit {
   searchResults$: Observable<SearchResultDTO[]>;
   private searchStrings = new Subject<string>();
 
-  constructor(private searchService: SearchService) {
+  constructor(private searchService: SearchService, private spinner: NgxSpinnerService) {
   }
 
   // Push a search query into the observable stream.
@@ -35,7 +36,10 @@ export class SearchEngineComponent implements OnInit {
       switchMap((searchQuery: string) => this.searchService.search(searchQuery)),
     );
 
-    this.searchResults$.subscribe(_ => this.scrollToTop());
+    this.searchResults$.subscribe(_ => {
+      this.scrollToTop();
+      this.spinner.hide();
+    });
   }
 
   scrollToTop() {

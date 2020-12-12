@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SearchResultDTO } from './search-result';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
@@ -16,7 +17,8 @@ export class SearchService {
 
   constructor(
     private http: HttpClient,
-    @Inject('BASE_URL') baseUrl: string) {
+    @Inject('BASE_URL') baseUrl: string,
+    private spinner: NgxSpinnerService) {
     this.apiUrl = `${baseUrl}search`;
   }
 
@@ -26,6 +28,7 @@ export class SearchService {
       return of([]);
     }
 
+    this.spinner.show();
     return this.http.get<SearchResultDTO[]>(`${this.apiUrl}?query=${searchQuery}`).pipe(
       catchError(this.handleError<SearchResultDTO[]>('search', []))
     );

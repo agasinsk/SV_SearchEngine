@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { SearchEngineComponent } from './search-engine/search-engine.component';
 import { SearchResultListItemComponent } from './search-result-list-item/search-result-list-item.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { SearchResultListItemComponent } from './search-result-list-item/search-
     RouterModule.forRoot([
       { path: '', component: SearchEngineComponent, pathMatch: 'full' },
       { path: 'search-engine', component: SearchEngineComponent },
-    ])
+    ]),
+    NgxSpinnerModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
