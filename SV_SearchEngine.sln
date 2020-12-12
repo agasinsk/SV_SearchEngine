@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchEngine.Web", "SearchEngine.Web\SearchEngine.Web.csproj", "{6FE81DD4-EFF0-4B89-B975-EFF4E8C1C7F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchEngine.Service", "SearchEngine.Service\SearchEngine.Service.csproj", "{5FB39D1F-02F1-4BCF-814A-5FAEF0402C9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchEngine.Service", "SearchEngine.Service\SearchEngine.Service.csproj", "{5FB39D1F-02F1-4BCF-814A-5FAEF0402C9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchEngine.Tests", "SearchEngine.Tests\SearchEngine.Tests.csproj", "{DD78A313-3873-480E-B694-8D053671EFE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchEngine.Tests", "SearchEngine.Tests\SearchEngine.Tests.csproj", "{DD78A313-3873-480E-B694-8D053671EFE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchEngine.Model", "SearchEngine.Model\SearchEngine.Model.csproj", "{A7718C85-6D07-46AB-9276-522B39E0CFD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchEngine.Model", "SearchEngine.Model\SearchEngine.Model.csproj", "{A7718C85-6D07-46AB-9276-522B39E0CFD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
