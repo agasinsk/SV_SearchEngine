@@ -5,8 +5,6 @@ namespace SearchEngine.Service.Implementation.SearchConfiguration
 {
     public class BuildingSearchConfiguration : BaseSearchConfiguration
     {
-        public override string TransitivePropertyName => null;
-
         protected override IDictionary<string, (int weight, int transitiveWeight)> SearchWeights => new Dictionary<string, (int, int)>
         {
             { nameof(Building.Name), (9, 8) },

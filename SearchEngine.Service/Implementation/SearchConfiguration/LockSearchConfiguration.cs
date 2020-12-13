@@ -5,8 +5,6 @@ namespace SearchEngine.Service.Implementation.SearchConfiguration
 {
     public class LockSearchConfiguration : BaseSearchConfiguration
     {
-        public override string TransitivePropertyName => nameof(Lock.BuildingId);
-
         protected override IDictionary<string, (int weight, int transitiveWeight)> SearchWeights => new Dictionary<string, (int, int)>
         {
             { nameof(Lock.Name), (10, 0) },
