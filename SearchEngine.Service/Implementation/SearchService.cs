@@ -45,6 +45,7 @@ namespace SearchEngine.Service.Implementation
                     Item = x.Key,
                     TotalWeight = GetTotalSearchWeight(x.Key, searchEvaluations)
                 })
+                .Where(x => x.TotalWeight > 0)
                 .OrderByDescending(x => x.TotalWeight);
 
             var searchResults = _mapper.Map<IEnumerable<SearchResultDTO>>(finalSearchEvaluations.Select(_ => _.Item));

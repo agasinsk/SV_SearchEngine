@@ -29,12 +29,17 @@
 </div>
 
 <div #listBox class="list-box">
-  <ul class="list-group">
-    <ng-container *ngFor="let searchResult of searchResults$ | async">
-      <app-search-result-list-item [item]="searchResult">
+  <ng-container *ngIf="searchResults$ | async as results">
+    <ng-container *ngIf="results.length === 0 && searchBox.value">
+      <div class="alert alert-danger" role="alert">
+        No results found for your query!
+      </div>
+    </ng-container>
+    <ng-container *ngFor="let result of results">
+      <app-search-result-list-item [item]="result">
       </app-search-result-list-item>
     </ng-container>
-  </ul>
+  </ng-container>
 </div>
 
 <ngx-spinner></ngx-spinner>
