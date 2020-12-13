@@ -23,8 +23,9 @@ namespace SearchEngine.Tests.Service
         [InlineData("Head", 14, 8)]
         [InlineData("office", 14, 8)]
         [InlineData("Office", 14, 8)]
+        [InlineData("Head Office", 95, 80)]
         [InlineData("HO", 7, 5)]
-        [InlineData("HOFF", 7, 5)]
+        [InlineData("HOFF", 70, 50)]
         [InlineData("Feringastraße", 5, 0)]
         [InlineData("85774", 5, 0)]
         [InlineData("Unterföhring", 5, 0)]
@@ -77,11 +78,11 @@ namespace SearchEngine.Tests.Service
         [InlineData("zimmer", 10, 0)]
         [InlineData("UID", 8, 0)]
         [InlineData("A89F98F3", 8, 0)]
-        [InlineData("Cylinder", 3, 0)]
+        [InlineData("Cylinder", 30, 0)]
         [InlineData("4.OG", 16, 0)]
         [InlineData("OG", 16, 0)]
         [InlineData("Floor", 6, 0)]
-        [InlineData("454", 6, 0)]
+        [InlineData("454", 60, 0)]
         [InlineData("", 0, 0)]
         [InlineData(null, 0, 0)]
         public void Should_GetCorrectSearchWeight_ForLock(string searchString, int expectedSearchWeight, int expectedTransitiveWeight)
@@ -180,7 +181,7 @@ namespace SearchEngine.Tests.Service
         [InlineData("UID", 8, 0)]
         [InlineData("378D17F6", 8, 0)]
         [InlineData("Guest", 10, 0)]
-        [InlineData("Card", 3, 0)]
+        [InlineData("Card", 30, 0)]
         [InlineData("Unknown", 0, 0)]
         [InlineData("", 0, 0)]
         [InlineData(null, 0, 0)]
@@ -191,7 +192,7 @@ namespace SearchEngine.Tests.Service
             {
                 Id = Guid.NewGuid(),
                 SerialNumber = "UID-378D17F6",
-                Type = Model.Enum.MediumType.Card,
+                Type = MediumType.Card,
                 Owner = "Guest 1",
             };
 

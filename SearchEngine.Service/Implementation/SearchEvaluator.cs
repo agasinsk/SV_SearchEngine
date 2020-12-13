@@ -6,6 +6,10 @@ namespace SearchEngine.Service.Implementation
 {
     public class SearchEvaluator : ISearchEvaluator
     {
+        private const int FullMatchMultiplier = 10;
+        private const int PartialMatchMultiplier = 1;
+        private const int NoMatchMultiplier = 0;
+
         private readonly ISearchConfigurationFactory _searchConfigurationFactory;
 
         public SearchEvaluator(ISearchConfigurationFactory searchConfigurationFactory)
@@ -24,7 +28,7 @@ namespace SearchEngine.Service.Implementation
 
             var properties = searchable.GetType().GetProperties();
             int totalWeight = 0, totalTransitiveWeight = 0;
-            var searchValue = searchString.ToLower();
+            var searchValue = searchString.Trim().ToLower();
 
             foreach (var property in properties)
             {
@@ -36,15 +40,34 @@ namespace SearchEngine.Service.Implementation
                 }
 
                 var propertyValue = property.GetValue(searchable);
+                var matchMultplier = GetMatchMultiplier(propertyValue, searchValue);
 
-                if (propertyValue != null && propertyValue.ToString().ToLower().Contains(searchValue))
-                {
-                    totalWeight += weight;
-                    totalTransitiveWeight += transitiveWeight;
-                }
+                totalWeight += matchMultplier * weight;
+                totalTransitiveWeight += matchMultplier * transitiveWeight;
             }
 
             return (totalWeight, totalTransitiveWeight);
+        }
+
+        private int GetMatchMultiplier(object propertyValue, string searchQuery)
+        {
+            var propertyText = propertyValue?.ToString().Trim().ToLower();
+
+            if (string.IsNullOrEmpty(propertyText))
+            {
+                return NoMatchMultiplier;
+            }
+
+            if (string.Equals(propertyText, searchQuery, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return FullMatchMultiplier;
+            }
+            else if (propertyText.Contains(searchQuery))
+            {
+                return PartialMatchMultiplier;
+            }
+
+            return NoMatchMultiplier;
         }
     }
 }
