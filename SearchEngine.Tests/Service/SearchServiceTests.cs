@@ -40,11 +40,15 @@ namespace SearchEngine.Tests.Service
             var data = GetMockedData();
 
             _dataProviderMock.Setup(p => p.GetData()).ReturnsAsync(data);
-            _searchEvaluatorMock.Setup(p => p.Evaluate(data.Buildings.First(), searchString)).Returns((14, 8));
+            _searchEvaluatorMock.Setup(p => p.Evaluate(data.Buildings.First(), searchString)).Returns((95, 80));
 
             var expectedFirstResult = data.Buildings.FirstOrDefault(x => x.Name.ToLower().Contains(searchString.ToLower()));
             var expectedSecondResult = data.Locks.FirstOrDefault(x => x.BuildingId == expectedFirstResult.Id);
-            var expectedSearchResultsCount = data.Buildings.Count() + data.Locks.Count() + data.Groups.Count() + data.Media.Count();
+
+            var totalSearchableItemsCount = data.Buildings.Count() + data.Locks.Count() + data.Groups.Count() + data.Media.Count();
+            var expectedBuidlingCount = data.Buildings.Count(x => x.Name.ToLower().Contains(searchString.ToLower()));
+            var expectedLocksCount = data.Locks.Count(x => x.BuildingId == expectedFirstResult.Id);
+            var expectedSearchResultsCount = expectedBuidlingCount + expectedLocksCount;
 
             // Act
             var searchResults = await _searchService.ApplySearch(searchString);
@@ -55,17 +59,17 @@ namespace SearchEngine.Tests.Service
             searchResults.Should().BeAssignableTo<IEnumerable<SearchResultDTO>>();
             searchResults.Should().HaveCount(expectedSearchResultsCount);
 
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Building).Should().Be(data.Buildings.Count());
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Lock).Should().Be(data.Locks.Count());
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Group).Should().Be(data.Groups.Count());
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Medium).Should().Be(data.Media.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Building).Should().Be(expectedBuidlingCount);
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Lock).Should().Be(expectedLocksCount);
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Group).Should().Be(0);
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Medium).Should().Be(0);
 
             searchResults.First().ResultObjectId.Should().Be(expectedFirstResult.Id);
             searchResults.ElementAt(1).ResultObjectId.Should().Be(expectedSecondResult.Id);
 
             _dataProviderMock.Verify(x => x.GetData(), Times.Once);
 
-            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<ISearchable>(), It.IsAny<string>()), Times.Exactly(expectedSearchResultsCount));
+            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<ISearchable>(), It.IsAny<string>()), Times.Exactly(totalSearchableItemsCount));
             _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<Building>(), searchString), Times.Exactly(data.Buildings.Count()));
             _searchEvaluatorMock.Verify(x => x.Evaluate(data.Buildings.First(), searchString), Times.Once);
             _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<Lock>(), searchString), Times.Exactly(data.Locks.Count()));
@@ -86,7 +90,11 @@ namespace SearchEngine.Tests.Service
 
             var expectedFirstResult = data.Groups.FirstOrDefault(x => x.Name.ToLower().Contains(searchString.ToLower()));
             var expectedSecondResult = data.Media.FirstOrDefault(x => x.GroupId == expectedFirstResult.Id);
-            var expectedSearchResultsCount = data.Buildings.Count() + data.Locks.Count() + data.Groups.Count() + data.Media.Count();
+
+            var totalSearchableItemsCount = data.Buildings.Count() + data.Locks.Count() + data.Groups.Count() + data.Media.Count();
+            var expectedGroupCount = data.Groups.Count(x => x.Name.ToLower().Contains(searchString.ToLower()));
+            var expectedMediaCount = data.Media.Count(x => x.GroupId == expectedFirstResult.Id);
+            var expectedSearchResultsCount = expectedGroupCount + expectedMediaCount;
 
             // Act
             var searchResults = await _searchService.ApplySearch(searchString);
@@ -97,17 +105,17 @@ namespace SearchEngine.Tests.Service
             searchResults.Should().BeAssignableTo<IEnumerable<SearchResultDTO>>();
             searchResults.Should().HaveCount(expectedSearchResultsCount);
 
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Building).Should().Be(data.Buildings.Count());
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Lock).Should().Be(data.Locks.Count());
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Group).Should().Be(data.Groups.Count());
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Medium).Should().Be(data.Media.Count());
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Building).Should().Be(0);
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Lock).Should().Be(0);
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Group).Should().Be(expectedGroupCount);
+            searchResults.Count(x => x.ResultObjectType == ObjectType.Medium).Should().Be(expectedMediaCount);
 
             searchResults.First().ResultObjectId.Should().Be(expectedFirstResult.Id);
             searchResults.ElementAt(1).ResultObjectId.Should().Be(expectedSecondResult.Id);
 
             _dataProviderMock.Verify(x => x.GetData(), Times.Once);
 
-            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<ISearchable>(), It.IsAny<string>()), Times.Exactly(expectedSearchResultsCount));
+            _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<ISearchable>(), It.IsAny<string>()), Times.Exactly(totalSearchableItemsCount));
             _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<Building>(), searchString), Times.Exactly(data.Buildings.Count()));
             _searchEvaluatorMock.Verify(x => x.Evaluate(data.Buildings.First(), searchString), Times.Once);
             _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<Lock>(), searchString), Times.Exactly(data.Locks.Count()));
@@ -119,18 +127,9 @@ namespace SearchEngine.Tests.Service
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public async Task Should_GetAllResults_WhenEmptySearchString(string query)
+        [InlineData("   ")]
+        public async Task Should_GetEmptyResults_WhenEmptySearchString(string query)
         {
-            // Arrange
-            var data = GetMockedData();
-            _dataProviderMock.Setup(p => p.GetData()).ReturnsAsync(data);
-            var expectedSearchResultsCount = data.Buildings.Count() + data.Locks.Count() + data.Groups.Count() + data.Media.Count();
-            var expectedSearchResultObjectIds = data.Buildings.Cast<ISearchable>()
-                .Concat(data.Locks)
-                .Concat(data.Media)
-                .Concat(data.Groups)
-                .Select(x => x.Id);
-
             // Act
             var searchResults = await _searchService.ApplySearch(query);
 
@@ -138,16 +137,9 @@ namespace SearchEngine.Tests.Service
             using var scope = new AssertionScope();
             searchResults.Should().NotBeNull();
             searchResults.Should().BeAssignableTo<IEnumerable<SearchResultDTO>>();
-            searchResults.Should().HaveCount(expectedSearchResultsCount);
+            searchResults.Should().HaveCount(0);
 
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Building).Should().Be(data.Buildings.Count());
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Lock).Should().Be(data.Locks.Count());
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Group).Should().Be(data.Groups.Count());
-            searchResults.Count(x => x.ResultObjectType == ObjectType.Medium).Should().Be(data.Media.Count());
-
-            searchResults.Select(x => x.ResultObjectId).Should().BeEquivalentTo(expectedSearchResultObjectIds);
-
-            _dataProviderMock.Verify(x => x.GetData(), Times.Once);
+            _dataProviderMock.Verify(x => x.GetData(), Times.Never);
 
             _searchEvaluatorMock.Verify(x => x.Evaluate(It.IsAny<ISearchable>(), It.IsAny<string>()), Times.Never);
         }
@@ -226,6 +218,15 @@ namespace SearchEngine.Tests.Service
                     Description = "CEO's transponder",
                     Type = MediumType.Transponder,
                     SerialNumber = "UID-9876543",
+                },
+                new Medium
+                {
+                    Id = Guid.NewGuid(),
+                    GroupId = Guid.NewGuid(),
+                    Owner = "CTO",
+                    Description = "CTO's card",
+                    Type = MediumType.Card,
+                    SerialNumber = "UID-123456",
                 },
             };
 

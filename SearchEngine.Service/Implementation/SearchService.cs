@@ -25,32 +25,36 @@ namespace SearchEngine.Service.Implementation
 
         public async Task<IEnumerable<SearchResultDTO>> ApplySearch(string query)
         {
-            var data = await _dataProvider.GetData();
-
-            if (string.IsNullOrEmpty(query))
+            if (string.IsNullOrWhiteSpace(query))
             {
-                return _mapper.Map<IEnumerable<SearchResultDTO>>(data);
+                return Enumerable.Empty<SearchResultDTO>();
             }
 
-            var searchableItems = data.Buildings.Cast<ISearchable>()
-                .Concat(data.Locks)
-                .Concat(data.Groups)
-                .Concat(data.Media);
-
+            var searchableItems = await GetSearchableItems();
             var searchEvaluations = searchableItems.ToDictionary(x => x, v => _searchEvaluator.Evaluate(v, query));
 
-            var finalSearchEvaluations = searchEvaluations
+            var searchResults = searchEvaluations
                 .Select(x => new
                 {
                     Item = x.Key,
                     TotalWeight = GetTotalSearchWeight(x.Key, searchEvaluations)
                 })
                 .Where(x => x.TotalWeight > 0)
-                .OrderByDescending(x => x.TotalWeight);
+                .OrderByDescending(x => x.TotalWeight)
+                .Select(x => x.Item)
+                .ToList();
 
-            var searchResults = _mapper.Map<IEnumerable<SearchResultDTO>>(finalSearchEvaluations.Select(_ => _.Item));
+            return _mapper.Map<IEnumerable<SearchResultDTO>>(searchResults);
+        }
 
-            return searchResults;
+        private async Task<IEnumerable<ISearchable>> GetSearchableItems()
+        {
+            var data = await _dataProvider.GetData();
+
+            return data.Buildings.Cast<ISearchable>()
+                .Concat(data.Locks)
+                .Concat(data.Groups)
+                .Concat(data.Media);
         }
 
         private int GetTotalSearchWeight(ISearchable searchableItem, Dictionary<ISearchable, (int weight, int transitiveWeight)> evaluations)
@@ -60,7 +64,7 @@ namespace SearchEngine.Service.Implementation
                 case ITransitiveSearchable transitiveSearchable:
                     var transitiveItem = evaluations.Keys.FirstOrDefault(x => x.Id == transitiveSearchable.TransitiveId);
 
-                    return searchableItem != null
+                    return transitiveItem != null
                         ? evaluations[searchableItem].weight + evaluations[transitiveItem].weight
                         : evaluations[searchableItem].weight;
 
