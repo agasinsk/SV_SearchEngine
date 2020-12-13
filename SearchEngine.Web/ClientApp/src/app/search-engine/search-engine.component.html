@@ -29,11 +29,11 @@
 </div>
 
 <div #listBox class="list-box">
-  <ul class="list-group" (change)="scrollToTop()">
-    <li *ngFor="let searchResult of searchResults$ | async">
+  <ul class="list-group">
+    <ng-container *ngFor="let searchResult of searchResults$ | async">
       <app-search-result-list-item [item]="searchResult">
       </app-search-result-list-item>
-    </li>
+    </ng-container>
   </ul>
 </div>
 
