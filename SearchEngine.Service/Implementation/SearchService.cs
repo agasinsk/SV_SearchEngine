@@ -65,7 +65,7 @@ namespace SearchEngine.Service.Implementation
                     var transitiveItem = evaluations.Keys.FirstOrDefault(x => x.Id == transitiveSearchable.TransitiveId);
 
                     return transitiveItem != null
-                        ? evaluations[searchableItem].weight + evaluations[transitiveItem].weight
+                        ? evaluations[searchableItem].weight + evaluations[transitiveItem].transitiveWeight
                         : evaluations[searchableItem].weight;
 
                 case ISearchable searchable:
